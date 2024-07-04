@@ -4,8 +4,8 @@ from myApp import db
 class User(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100))
-    email = db.Column(db.String(100))
-    password_hash = db.Column(db.String(128))
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
 
     def setPassword(self, password):
         self.password_hash = generate_password_hash(password)

@@ -3,6 +3,7 @@ from flask import current_app as app
 from myApp import db
 from myApp.models import User
 from sqlalchemy.exc import IntegrityError
+from werkzeug.security import generate_password_hash, check_password_hash
 
 @app.route("/")
 def home():
@@ -13,11 +14,18 @@ def home():
 def login():
     if request.method == "POST":
         session.permanent = True  # <--- makes the permanent session
-        user = request.form["nm"]
-        session["user"] = user
+        user_email = request.form["email"]
+        password = request.form['password']
+        
+        user = User.query.filter_by(email=user_email).first()
 
-        flash("Login Successful!")
-        return redirect(url_for("user"))
+        if user and check_password_hash(user.password_hash, password):
+            session['user'] = user.email
+            flash("Login Successful!")
+            return redirect(url_for("user"))
+        else:
+            flash("Invalid email or password", "error")
+            return redirect(url_for("user"))    
     else:
         if "user" in session:
             flash("Already logged in!")
@@ -56,17 +64,11 @@ def signup():
 
 @app.route("/user/", methods=["POST", "GET"])
 def user():
-    email = None        # init the email to Null
     if "user" in session:
-        user = session["user"]      # init the user in the list of users in the session
-        if request.method == "POST":    ## if the request is post meaning secure info like logging in 
-            email = request.form["email"]   # init email to the email we get from the request form
-            session["email"] = email
-            flash("Submission successful!")
-        else:
-            if "email" in session:      # if the session is a GET meaning just a endpoint to the page but they are still logged in save there session email
-                email = session["email"]
-        return render_template("user.html", email=email)
+        user_email = session["user"]      # init the user in the list of users in the session
+        user = User.query.filter_by(email=user_email).first()
+        if user:
+            return render_template("user.html", user=user)
     else:
         flash("You are not logged in!")
         return redirect(url_for("login"))

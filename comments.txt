@@ -1,0 +1,16 @@
+@app.route("/user/", methods=["POST", "GET"])
+def user():
+    email = None        # init the email to Null
+    if "user" in session:
+        user = session["user"]      # init the user in the list of users in the session
+        if request.method == "POST":    ## if the request is post meaning secure info like logging in 
+            email = request.form["email"]   # init email to the email we get from the request form
+            session["email"] = email
+            flash("Submission successful!")
+        else:
+            if "email" in session:      # if the session is a GET meaning just a endpoint to the page but they are still logged in save there session email
+                email = session["email"]
+        return render_template("user.html", email=email)
+    else:
+        flash("You are not logged in!")
+        return redirect(url_for("login"))
