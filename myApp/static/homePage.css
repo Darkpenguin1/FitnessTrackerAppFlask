@@ -14,17 +14,7 @@ body {
     margin: auto;
     padding: 20px;
 }
-header {
-    background-color: #f0f0f0;
-    color: grey;
-    text-align: center;
-    padding: 20px 0;
-    margin-bottom: 0;
-}
-header h1 {
-    font-size: 3em;
-    margin-bottom: 0px;
-}
+
 .hero {
     background-image: url('/static/images/test4.jfif');
     background-size: 60%;
@@ -149,13 +139,4 @@ header h1 {
     font-size: 1.1em;
     font-style: italic;
     margin-top: 10px;
-}
-footer {
-    background-color: #333333;
-    color: #ffffff;
-    text-align: center;
-    padding: 20px 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
 }

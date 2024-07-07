@@ -1,12 +1,30 @@
-html,body {
-    margin:0;
-    padding:0;
+/* Reset default browser styles */
+html, body {
+    margin: 0;
+    padding: 0;
 }
-.container-fluid { /*This singular line was all it took to solve hours of depression */
+
+.container-fluid {
     width: 100%;
-    margin: 0px;
-    padding: 0px;
-  }
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensure specificity and override */
+.navbar {
+    background-color: #f0f0f0 !important; /* Ensure the background color overrides any other styles */
+    color: #ffffff; /* Change navbar text color */
+}
+
+.navbar .navbar-brand {
+    color: black; /* Change navbar brand (logo/text) color */
+}
+
+.navbar .navbar-nav .nav-link {
+    color: black; /* Change navbar links color */
+}
+
+
 footer {
     background-color: #333333;
     color: #ffffff;
