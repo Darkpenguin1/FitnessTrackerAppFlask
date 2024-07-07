@@ -1,0 +1,18 @@
+html,body {
+    margin:0;
+    padding:0;
+}
+.container-fluid { /*This singular line was all it took to solve hours of depression */
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+  }
+footer {
+    background-color: #333333;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
