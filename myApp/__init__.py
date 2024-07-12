@@ -5,6 +5,7 @@ from config import Config
 from dotenv import load_dotenv
 import os
 
+
 db = SQLAlchemy()
 
 def create_app():
@@ -15,6 +16,10 @@ def create_app():
     
     db.init_app(app)
 
+    
+
     with app.app_context():
-        from . import routes  # Import routes here to avoid circular imports
+        from myApp.blueprints.user import routes  # Import routes here to avoid circular imports
+        from myApp.blueprints.user.routes import user_bp
+        app.register_blueprint(user_bp, url_prefix="/")
         return app

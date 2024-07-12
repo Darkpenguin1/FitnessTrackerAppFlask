@@ -1,12 +1,49 @@
+<!-- templates/dashboard.html -->
 {% extends "base.html" %}
-{% block title %}User{% endblock %}
+{% block title %}User Dashboard{% endblock %}
 {% block content %}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-            {% for msg in messages %}
-                <p>{{msg}}</p>
-            {% endfor %}
-        {% endif %}    
+            <div class="alert alert-info" role="alert">
+                {% for msg in messages %}
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endwith %}
-<h1>Welcome {{user.username}}</h1>
+
+    <h1>Welcome, {{ user.username }}!</h1>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Create Workout Plan</h5>
+                        <p class="card-text">Plan your workouts for the week.</p>
+                        <a href="#" class="btn btn-primary">Create Plan</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Log Exercise</h5>
+                        <p class="card-text">Log your latest exercise sessions.</p>
+                        <a href="{{ url_for('user_bp.create_exercise') }}" class="btn btn-primary">Log Exercise</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">View Statistics</h5>
+                        <p class="card-text">Check your progress with detailed statistics.</p>
+                        <a href="#" class="btn btn-primary">View Statistics</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
