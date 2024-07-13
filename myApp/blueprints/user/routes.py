@@ -90,13 +90,7 @@ def view():
     return render_template("view.html", values=User.query.all())
 
 
-"""
-@app.route("/create_exercise/", methods=["GET", "POST"])
-def create_exercise():
-    if "user" in session:
-        user_email = session["user"]
-        user = User.query.filter_by(email=user_email).first()
-"""     
+
 
 @user_bp.route("/create_exercise/", methods=["GET", "POST"])
 def create_exercise():
