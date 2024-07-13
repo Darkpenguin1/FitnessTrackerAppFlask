@@ -4,6 +4,7 @@ from myApp import db
 from myApp.models import User
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 
 user_bp = Blueprint('user_bp', __name__)
@@ -11,6 +12,16 @@ user_bp = Blueprint('user_bp', __name__)
 @user_bp.route("/")
 def home():
     return render_template("home.html")
+
+def login_required(f):          ## i stole this off stack overflow bascially this function serves as user authentication without having to repeat logic over and over again
+    @wraps(f)       # wraps just means the original functions purpose and data is maintained
+    def security_function(*args, **kwargs):     ## I just learned that *args, and **kwargs means that whatever function is passed into 
+        if "user" not in session:                       ## login_required can have as many key word args and postional args as needed                                
+            flash("Login to access!!")
+            return redirect(url_for('user_bp.login'))
+        return f(*args, **kwargs)       # if user is logged in returns the original function
+    return security_function
+
 
 
 @user_bp.route("/login/", methods=["POST", "GET"])
@@ -53,7 +64,6 @@ def signup():
         new_user = User(name, email, password)       ## once we have all the info we need to create a user obj we init it as a new user
         
         try:
-
             db.session.add(new_user)        ## push the user into the db
             db.session.commit() 
             flash("Signup Succesful please login with your new credentials!")
@@ -66,15 +76,13 @@ def signup():
     return render_template("signup.html")       ## if the request is just a get ie when a user just goes to the site (A GET request) we just render the html page
 
 @user_bp.route("/user/", methods=["POST", "GET"])
+@login_required
 def user():
-    if "user" in session:
-        user_email = session["user"]      # init the user in the list of users in the session
-        user = User.query.filter_by(email=user_email).first()
-        if user:
-            return render_template("user.html", user=user)
-    else:
-        flash("You are not logged in!")
-        return redirect(url_for("user_bp.login"))
+    user_email = session["user"]
+    user = User.query.filter_by(email=user_email).first()
+    if user:
+        return render_template("user.html", user=user)
+
 
 @user_bp.route("/logout/")
 def logout():
@@ -93,5 +101,13 @@ def view():
 
 
 @user_bp.route("/create_exercise/", methods=["GET", "POST"])
+@login_required
 def create_exercise():
-    return render_template("createExercise.html") 
+    user_email = session["user"]
+    user = User.query.filter_by(email=user_email).first()
+    if user:
+        return render_template("createExercise.html")
+
+
+    
+    
