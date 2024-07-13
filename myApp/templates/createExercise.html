@@ -7,7 +7,7 @@
     <body>
         <div class="container">
             <h1>Create Exercise Entry</h1>
-            <form method="POST" action="{{ url_for('create_exercise') }}">
+            <form method="POST" action="{{ url_for('user_bp.create_exercise') }}">
                 <div class="form-group">
                     <label for="name">Exercise Name:</label>
                     <input type="text" id="name" name="name" class="form-control" required>
@@ -31,7 +31,7 @@
                 <button type="submit" class="btn btn-primary">Create Exercise</button>
             </form>
             <br>
-            <a href="{{ url_for('user') }}" class="btn btn-secondary">Back to Profile</a>
+            <a href="{{ url_for('user_bp.user') }}" class="btn btn-secondary">Back to Profile</a>
         </div>
     </body>
 
