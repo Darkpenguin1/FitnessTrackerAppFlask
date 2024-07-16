@@ -107,3 +107,7 @@ def create_exercise():
 
     
     
+@user_bp.route("/log_pr/", methods=["GET", "POST"])
+@login_required
+def log_pr():
+    return render_template("log_pr.html")

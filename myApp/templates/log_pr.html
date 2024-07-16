@@ -1,13 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Exercise Creation Page{% endblock %}
+
+{% block title %}PR Log{% endblock %}
 
 {% block content %}
-    <head><link rel="stylesheet" href="{{ url_for('static', filename='css/createExercise.css') }}"></head>
 
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/logPr.css') }}">
+    </head>
     <body>
         <div class="container">
-            <h1>Create Exercise Entry</h1>
-            <form method="POST" action="{{ url_for('user_bp.create_exercise') }}">
+            <h1>Log Personal Record (PR)</h1>
+            <form method="POST" action="{{ url_for('user_bp.log_pr') }}">
                 <div class="form-group">
                     <label for="name">Exercise Name:</label>
                     <input type="text" id="name" name="name" class="form-control" required>
@@ -36,7 +39,7 @@
                     <input type="date" id="date" name="date" class="form-control">
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Create Exercise</button>
+                <button type="submit" class="btn btn-primary">Log PR</button>
             </form>
             <br>
             <a href="{{ url_for('user_bp.user') }}" class="btn btn-secondary">Back to Profile</a>
