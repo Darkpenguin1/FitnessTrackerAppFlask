@@ -4,9 +4,11 @@ from datetime import timedelta
 from config import Config
 from dotenv import load_dotenv
 import os
-
+from flask_login import LoginManager
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
     load_dotenv()
@@ -15,7 +17,17 @@ def create_app():
     app.permanent_session_lifetime = timedelta(hours=5)
     
     db.init_app(app)
+    migrate.init_app(app, db)
 
+    login_manager = LoginManager()
+    login_manager.login_view = "user_bp.login"
+    login_manager.init_app(app)
+
+    from myApp.models import User   # prevents circular imports
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
     
 
     with app.app_context():

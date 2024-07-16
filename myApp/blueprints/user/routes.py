@@ -1,11 +1,11 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash, Blueprint
 from flask import current_app as app
 from myApp import db
-from myApp.models import User
+from myApp.models import User, Exercise
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-
+from flask_login import login_user, logout_user, login_required, current_user
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -13,39 +13,30 @@ user_bp = Blueprint('user_bp', __name__)
 def home():
     return render_template("home.html")
 
-def login_required(f):          ## i stole this off stack overflow bascially this function serves as user authentication without having to repeat logic over and over again
-    @wraps(f)       # wraps just means the original functions purpose and data is maintained
-    def security_function(*args, **kwargs):     ## I just learned that *args, and **kwargs means that whatever function is passed into 
-        if "user" not in session:                       ## login_required can have as many key word args and postional args as needed                                
-            flash("Login to access!!")
-            return redirect(url_for('user_bp.login'))
-        return f(*args, **kwargs)       # if user is logged in returns the original function
-    return security_function
-
 
 
 @user_bp.route("/login/", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-        session.permanent = True  # <--- makes the permanent session
         user_email = request.form["email"]
         password = request.form['password']
         
         user = User.query.filter_by(email=user_email).first()
 
         if user and check_password_hash(user.password_hash, password):
-            session['user'] = user.email
+            login_user(user, remember=True)
             flash("Login Successful!")
             return redirect(url_for("user_bp.user"))
         else:
             flash("Invalid email or password", "error")
-            return redirect(url_for("user_bp.user"))    
+            return redirect(url_for("user_bp.login"))    
     else:
-        if "user" in session:
+        if current_user.is_authenticated:
             flash("Already logged in!")
             return redirect(url_for("user_bp.user"))
 
         return render_template("login.html")
+
     
 
 @user_bp.route("/signup/", methods=["POST", "GET"])
@@ -78,19 +69,15 @@ def signup():
 @user_bp.route("/user/", methods=["POST", "GET"])
 @login_required
 def user():
-    user_email = session["user"]
-    user = User.query.filter_by(email=user_email).first()
-    if user:
-        return render_template("user.html", user=user)
+    user = current_user
+    return render_template("user.html", user=user)
 
 
 @user_bp.route("/logout/")
+@login_required
 def logout():
-    flash("You have succesfully logged out!", "info")
-    if "user" in session:
-        user = session["user"]
-    session.pop("user", None)
-    session.pop("email", None)
+    logout_user()
+    flash("You have succesfully logged out!")
     return redirect(url_for("user_bp.login"))
 
 @user_bp.route("/view/")
@@ -103,11 +90,24 @@ def view():
 @user_bp.route("/create_exercise/", methods=["GET", "POST"])
 @login_required
 def create_exercise():
-    user_email = session["user"]
-    user = User.query.filter_by(email=user_email).first()
-    if user:
-        return render_template("createExercise.html")
+    if request.method == "POST":
+        name = request.form["name"]
+        description = request.form["description"]
+        weight = request.form["weight", None]
+        user_id = current_user._id
 
+        new_exercise = Exercise(name, description, user_id, weight)
+
+        db.session.add(new_exercise)
+        db.session.commit()
+
+        flash("Exercise Logged")
+        return redirect(url_for("user_bp.user"))
+    return render_template("createExercise.html")
 
     
     
+@user_bp.route("/log_pr/", methods=["GET", "POST"])
+@login_required
+def log_pr():
+    return render_template("log_pr.html")
