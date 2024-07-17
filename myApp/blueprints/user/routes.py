@@ -82,7 +82,22 @@ def logout():
 
 @user_bp.route("/view/")
 def view():
-    return render_template("view.html", values=User.query.all())
+    users = User.query.all()
+    return render_template("view.html", users=users)
+
+# myApp/user/routes.py
+
+@user_bp.route("/delete_user/<int:user_id>", methods=["POST"])
+@login_required
+def delete_user(user_id):
+    user = User.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        flash(f"User {user.username} deleted successfully.", "success")
+    else:
+        flash(f"User not found.", "error")
+    return redirect(url_for("user_bp.view"))
 
 
 
@@ -107,7 +122,7 @@ def create_exercise():
 
     
     
-@user_bp.route("/log_pr/", methods=["GET", "POST"])
+@user_bp.route("/log_pr/", methods=["GET", "POST"]) ## blank for now
 @login_required
 def log_pr():
     return render_template("log_pr.html")
