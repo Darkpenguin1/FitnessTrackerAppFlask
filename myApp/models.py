@@ -32,6 +32,9 @@ class User(UserMixin, db.Model):
         self.email = email
         self.setPassword(password)
     
+    def __str__(self):
+        return self.email
+
 
 class Exercise(db.Model):       ## A new model to represent the properties of exercise (what will be logged)
     _id = db.Column(db.Integer, primary_key=True)
