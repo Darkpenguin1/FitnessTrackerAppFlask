@@ -33,10 +33,21 @@
           </div>
         </div>
     </nav>
+    
 
     <div class="container-fluid">
-        {% block content %}
-        {% endblock %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="alert alert-info" role="alert">
+              {% for msg in messages %}
+                  {{ msg }}
+              {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}
+      
+      {% endblock %}
     </div>
     
     <footer>
