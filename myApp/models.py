@@ -3,6 +3,14 @@ from myApp import db
 from datetime import datetime
 from flask_login import UserMixin
 
+# Association table to declare the many to many relationship between (Workout Day and Exercises) A workoutday can use multiple exercises and exercises can be on many days
+workout_day_exercise = db.Table('workout_day_exercise', 
+    db.Column('workout_day_id', db.Integer, db.ForeignKey('workout_day._id'), primaryKey=True),
+    db.Column('exercise_id', db.Integer, db.ForeignKey('exercise._id'), primaryKey=True)
+)
+
+
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -11,6 +19,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     exercises = db.relationship('Exercise', backref='user', lazy=True)
+    workout_plan = db.relationship('WorkoutPlan', backref='user', lazy=True)
 
 
     def setPassword(self, password):
@@ -46,6 +55,8 @@ class Exercise(db.Model):       ## A new model to represent the properties of ex
     is_pr = db.Column(db.Boolean, default=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user._id'), name='exercise_user_fk', nullable=False)
 
+    workout_days = db.relationship('WorkoutDay', secondary=workout_day_exercise, lazy='subquery', backref=db.backref('exercises', lazy=True))
+
     def __init__(self, name, description, user_id, weight=None, unit=None, date=None, is_pr=False):
         self.name = name
         self.description = description
@@ -62,3 +73,33 @@ class Exercise(db.Model):       ## A new model to represent the properties of ex
     def __repr__(self):
         return f'<Exercise {self.name} Description: {self.description}>'
     
+class WorkoutPlan(db.Model):
+    __tablename__ = 'workout_plan'
+    _id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user._id'), name='exercise_user_fk', nullable=False)
+    cycle_type = db.Column(db.String, nullable=False)
+    cycle_length = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, name, user_id, cycle_type, cycle_length):   # okay so most often times workout plans are in cycle EXAMPLE: Push Pull Legs
+        self.name = name
+        self.user_id = user_id
+        self.cycle_type = cycle_type
+        self.cycle_length = cycle_length
+    
+    def __repr__(self):
+        return f'<WorkoutPlan {self.name}>'
+    
+class WorkoutDay(db.Model):
+    __tablename__ = 'workout_day'
+    _id = db.Column(db.Integer, primary_key=True)
+    workout_plan_id = db.Column(db.Integer, db.ForeignKey('workout_plan._id'), nullable=False)
+    day_number = db.Column(db.Integer, nullable=False)
+    exercises = db.relationship('Exercise', secondary=workout_day_exercise, lazy='subquery', backref=db.backref('workout_days', lazy=True))
+    
+    def __init__(self, workout_plan_id, day_number):
+        self.workout_plan_id = workout_plan_id
+        self.day_number = day_number
+
+    def __repr__(self):
+        return f'<WorkoutDay Plan ID: {self.workout_plan_id}, Day Number {self.day_number}'
