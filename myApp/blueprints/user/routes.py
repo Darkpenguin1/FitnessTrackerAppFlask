@@ -18,8 +18,8 @@ def home():
 @user_bp.route("/login/", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
-        user_email = request.form["email"]
-        password = request.form['password']
+        user_email = request.form.get("email")
+        password = request.form.get('password')
         
         user = User.query.filter_by(email=user_email).first()
 
@@ -42,9 +42,9 @@ def login():
 @user_bp.route("/signup/", methods=["POST", "GET"])
 def signup():
     if request.method == "POST":    ## if the user enters there info ie a POST method
-        name = request.form["username"]     ## init the name and email var to the info entered on the html form
-        email = request.form["email"]
-        password = request.form["password"]
+        name = request.form.get("username")     ## init the name and email var to the info entered on the html form
+        email = request.form.get("email")
+        password = request.form.get("password")
 
         #checkif user already exists
         existing_user = User.query.filter_by(email=email).first()      
@@ -106,9 +106,14 @@ def delete_user(user_id):
 @login_required
 def create_exercise():
     if request.method == "POST":
-        name = request.form["name"]
-        description = request.form["description"]
-        weight = request.form["weight", None]
+        name = request.form.get("name")
+        description = request.form.get("description")
+        weight = request.form.get("weight", None)
+        
+        if not name or not description:
+            flash("Name and Description are required.")
+            return redirect(url_for("user_bp.create_exercise"))
+
         user_id = current_user._id
 
         new_exercise = Exercise(name, description, user_id, weight)
