@@ -80,7 +80,7 @@ def logout():
     flash("You have succesfully logged out!")
     return redirect(url_for("user_bp.login"))
 
-@user_bp.route("/view/")
+@user_bp.route("/view/")    ## views login info for all users the password for all users is 'pass'
 def view():
     users = User.query.all()
     return render_template("view.html", users=users)
