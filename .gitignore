@@ -6,3 +6,4 @@ migrations
 notes.txt
 __pycache__.py
 /myApp/__pycache__
+*.pyc

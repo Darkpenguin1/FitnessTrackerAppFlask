@@ -1,0 +1,19 @@
+Just a quick file of everything I want to do within a "sprint" just trying to simulate the real world even though I am far from that 
+
+curr date = 7/17/2024
+
+
+Everything I want to accomplish this "Sprint"
+
+1 week: Implement crud functionality to the admin page. To create, update, delete users from the db
+
+
+
+
+
+
+
+
+
+
+
