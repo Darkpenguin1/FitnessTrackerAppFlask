@@ -18,8 +18,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), nullable=False)    # -- to be null when submitted?
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    exercises = db.relationship('Exercise', backref='user', lazy=True)
-    workout_plan = db.relationship('WorkoutPlan', backref='user', lazy=True)
+    exercises = db.relationship('Exercise', back_populates='user', lazy=True)
+    workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True)
 
 
     def setPassword(self, password):
@@ -55,7 +55,8 @@ class Exercise(db.Model):       ## A new model to represent the properties of ex
     is_pr = db.Column(db.Boolean, default=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user._id'), name='exercise_user_fk', nullable=False)
 
-    workout_days = db.relationship('WorkoutDay', secondary=workout_day_exercise, lazy='subquery', backref=db.backref('exercises_association', lazy=True))
+    workout_days = db.relationship('WorkoutDay', secondary=workout_day_exercise, lazy='subquery', back_populates='exercises')
+    user = db.relationship('User', back_populates='exercises')
 
     def __init__(self, name, description, user_id, weight=None, unit=None, date=None, is_pr=False):
         self.name = name
@@ -81,7 +82,8 @@ class WorkoutPlan(db.Model):
     cycle_type = db.Column(db.String, nullable=False)
     cycle_length = db.Column(db.Integer, nullable=False)
 
-    workout_days = db.relationship('WorkoutDay', backref='workout_plan', lazy=True)
+    workout_days = db.relationship('WorkoutDay', back_populates='workout_plan', lazy=True)
+    user = db.relationship('User', back_populates='workout_plans')
 
     def __init__(self, name, user_id, cycle_type, cycle_length):   # okay so most often times workout plans are in cycle EXAMPLE: Push Pull Legs
         self.name = name
@@ -97,8 +99,10 @@ class WorkoutDay(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     workout_plan_id = db.Column(db.Integer, db.ForeignKey('workout_plan._id'), nullable=False)
     day_number = db.Column(db.Integer, nullable=False)
-    exercises = db.relationship('Exercise', secondary=workout_day_exercise, lazy='subquery', backref=db.backref('workout_days_association', lazy=True))
     
+    exercises = db.relationship('Exercise', secondary=workout_day_exercise, lazy='subquery', back_populates='workout_days')
+    workout_plan = db.relationship('WorkoutPlan', back_populates='workout_days')
+
     def __init__(self, workout_plan_id, day_number):
         self.workout_plan_id = workout_plan_id
         self.day_number = day_number
