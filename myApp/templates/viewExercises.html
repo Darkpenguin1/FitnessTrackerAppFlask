@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-<head><link rel="stylesheet" href="{{ url_for('static', filename='css/viewExercises.css') }}"></head>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/viewExercises.css') }}">
+</head>
 <div class="container mt-4">
     <h1>Your Logged Exercises</h1>
 
@@ -13,15 +15,23 @@
                     <th>Description</th>
                     <th>Weight</th>
                     <th>Date Logged</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for exercise in exercises %}
                     <tr>
-                        <td>{{ exercise.name }}</td>
-                        <td>{{ exercise.description }}</td>
-                        <td>{{ exercise.weight or 'N/A' }}</td>
-                        <td>{{ exercise.date.strftime('%Y-%m-%d') }}</td>
+                        <form method="POST" action="{{ url_for('user_bp.view_exercises') }}">
+                            <input type="hidden" name="exercise_id" value="{{ exercise._id }}">
+                            <td><input type="text" name="name" value="{{ exercise.name }}" class="form-control"></td>
+                            <td><input type="text" name="description" value="{{ exercise.description }}" class="form-control"></td>
+                            <td><input type="number" step="any" name="weight" value="{{ exercise.weight or '' }}" class="form-control"></td>
+                            <td>{{ exercise.date.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <button type="submit" name="update" class="btn btn-success">Update</button>
+                                <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+                            </td>
+                        </form>
                     </tr>
                 {% endfor %}
             </tbody>
