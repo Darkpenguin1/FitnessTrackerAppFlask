@@ -128,11 +128,29 @@ def create_exercise():
 @user_bp.route("/view_exercises/", methods=["GET", "POST"])
 @login_required
 def view_exercises():
+    if request.method == "POST":
+        if 'update' in request.form:
+            exercise_id = request.form.get('exercise_id')
+            exercise = Exercise.query.get(exercise_id)
+            if exercise:
+                exercise.name = request.form.get("name", exercise.name)
+                exercise.description = request.form.get("description", exercise.description)
+                exercise.weight = request.form.get("weight", exercise.weight)
+                db.session.commit()
+                flash("Exercise Succesfully Updated!", 'success')
+        elif 'delete' in request.form:
+            exercise_id = request.form.get('exercise_id')
+            exercise = Exercise.query.get(exercise_id)
+            if exercise:
+                db.session.delete(exercise)
+                db.session.commit()
+                flash("Exercise Deleted Successfully!", 'success')
     exercises = Exercise.query.filter_by(user_id=current_user._id).all()
     return render_template("viewExercises.html", exercises=exercises)
 
 
 """
+Blank for now
 @user_bp.route("/create_workoutPlan/", methods=["GET", "POST"])
 @login_required
 def create_workoutPlan():
