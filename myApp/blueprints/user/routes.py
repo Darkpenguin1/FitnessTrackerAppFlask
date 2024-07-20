@@ -125,7 +125,19 @@ def create_exercise():
         return redirect(url_for("user_bp.user"))
     return render_template("createExercise.html")
 
-    
+@user_bp.route("/view_exercises/", methods=["GET", "POST"])
+@login_required
+def view_exercises():
+    exercises = Exercise.query.filter_by(user_id=current_user._id).all()
+    return render_template("viewExercises.html", exercises=exercises)
+
+
+"""
+@user_bp.route("/create_workoutPlan/", methods=["GET", "POST"])
+@login_required
+def create_workoutPlan():
+    if request.method
+"""    
     
 @user_bp.route("/log_pr/", methods=["GET", "POST"]) ## blank for now
 @login_required
