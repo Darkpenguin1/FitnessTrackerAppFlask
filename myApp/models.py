@@ -55,7 +55,7 @@ class Exercise(db.Model):       ## A new model to represent the properties of ex
     is_pr = db.Column(db.Boolean, default=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user._id'), name='exercise_user_fk', nullable=False)
 
-    workout_days = db.relationship('WorkoutDay', secondary=workout_day_exercise, lazy='subquery', backref=db.backref('exercises', lazy=True))
+    workout_days = db.relationship('WorkoutDay', secondary=workout_day_exercise, lazy='subquery', backref=db.backref('exercises_association', lazy=True))
 
     def __init__(self, name, description, user_id, weight=None, unit=None, date=None, is_pr=False):
         self.name = name
@@ -81,6 +81,8 @@ class WorkoutPlan(db.Model):
     cycle_type = db.Column(db.String, nullable=False)
     cycle_length = db.Column(db.Integer, nullable=False)
 
+    workout_days = db.relationship('WorkoutDay', backref='workout_plan', lazy=True)
+
     def __init__(self, name, user_id, cycle_type, cycle_length):   # okay so most often times workout plans are in cycle EXAMPLE: Push Pull Legs
         self.name = name
         self.user_id = user_id
@@ -95,7 +97,7 @@ class WorkoutDay(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     workout_plan_id = db.Column(db.Integer, db.ForeignKey('workout_plan._id'), nullable=False)
     day_number = db.Column(db.Integer, nullable=False)
-    exercises = db.relationship('Exercise', secondary=workout_day_exercise, lazy='subquery', backref=db.backref('workout_days', lazy=True))
+    exercises = db.relationship('Exercise', secondary=workout_day_exercise, lazy='subquery', backref=db.backref('workout_days_association', lazy=True))
     
     def __init__(self, workout_plan_id, day_number):
         self.workout_plan_id = workout_plan_id
