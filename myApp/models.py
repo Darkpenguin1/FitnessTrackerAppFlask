@@ -5,8 +5,8 @@ from flask_login import UserMixin
 
 # Association table to declare the many to many relationship between (Workout Day and Exercises) A workoutday can use multiple exercises and exercises can be on many days
 workout_day_exercise = db.Table('workout_day_exercise', 
-    db.Column('workout_day_id', db.Integer, db.ForeignKey('workout_day._id'), primaryKey=True),
-    db.Column('exercise_id', db.Integer, db.ForeignKey('exercise._id'), primaryKey=True)
+    db.Column('workout_day_id', db.Integer, db.ForeignKey('workout_day._id'), primary_key=True),
+    db.Column('exercise_id', db.Integer, db.ForeignKey('exercise._id'), primary_key=True)
 )
 
 
