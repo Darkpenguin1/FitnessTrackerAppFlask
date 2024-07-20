@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), nullable=False)    # -- to be null when submitted?
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    exercises = db.relationship('Exercise', back_populates='user', lazy=True)
+    exercises = db.relationship('Exercise', back_populates='user', lazy=True)   ## Back ref got wayyyyyyyyyyyyyy too complicated and back_populated is best practice so i switched
     workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True)
 
 
