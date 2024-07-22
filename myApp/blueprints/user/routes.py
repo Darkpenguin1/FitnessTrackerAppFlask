@@ -148,15 +148,13 @@ def view_exercises():
     exercises = Exercise.query.filter_by(user_id=current_user._id).all()
     return render_template("viewExercises.html", exercises=exercises)
 
-
-"""
-Blank for now
 @user_bp.route("/create_workoutPlan/", methods=["GET", "POST"])
 @login_required
 def create_workoutPlan():
-    if request.method
-"""    
-    
+    return render_template("create_workoutPlan.html")
+
+
+
 @user_bp.route("/log_pr/", methods=["GET", "POST"]) ## blank for now
 @login_required
 def log_pr():
