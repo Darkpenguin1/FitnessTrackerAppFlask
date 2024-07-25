@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash, Blueprint
 from flask import current_app as app
 from myApp import db
-from myApp.models import User, Exercise
+from myApp.models import User, Exercise, WorkoutPlan, WorkoutDay
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -151,7 +151,30 @@ def view_exercises():
 @user_bp.route("/create_workoutPlan/", methods=["GET", "POST"])
 @login_required
 def create_workoutPlan():
+    if request.method == "POST":
+        name = request.form.get("name")
+        cycle_type = request.form.get("cycle_type")
+        cycle_length = request.form.get("cycle_length")
+        
+        if not name or not cycle_type or not cycle_length:
+            flash("Please fill out the form in its entirety!")
+            return redirect(url_for("user_bp.create_workoutPlan"))
+
+        user_id = current_user._id
+        
+        new_workoutPlan = WorkoutPlan(name, user_id,cycle_type, cycle_length)
+        db.session.add(new_workoutPlan)
+        db.session.commit()
+
+        
     return render_template("create_workoutPlan.html")
+
+@user_bp.route("/view_workoutPlan/", methods=["GET", "POST"])
+@login_required
+def view_workoutPlan():
+    user_id = current_user._id
+    plans = WorkoutPlan.query.filter_by(user_id=user_id).all()  
+    return render_template("view_workoutPlan.html", plans=plans)
 
 
 
