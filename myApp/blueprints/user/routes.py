@@ -174,7 +174,7 @@ def create_workoutPlan():
 def view_workoutPlan():
     user_id = current_user._id
     plans = WorkoutPlan.query.filter_by(user_id=user_id).all()  
-    return render_template("view_workoutPlan.html", plans=plans)
+    return render_template("view_workoutPlans.html", plans=plans)
 
 
 
