@@ -129,16 +129,28 @@ def create_workoutPlan():
     if request.method == "POST":
         name = request.form.get("name")
         cycle_type = request.form.get("cycle_type")
-        cycle_length = request.form.get("cycle_length")
+        cycle_length_str = request.form.get("cycle_length")
         
-        if not name or not cycle_type or not cycle_length:
+        if not name or not cycle_type or not cycle_length_str:
             flash("Please fill out the form in its entirety!")
+            return redirect(url_for("user_bp.create_workoutPlan"))
+
+        try:
+            cycle_length = int(cycle_length_str)
+
+        except ValueError:
+            flash("Invalid cycle length")
             return redirect(url_for("user_bp.create_workoutPlan"))
 
         user_id = current_user._id
         
         new_workoutPlan = WorkoutPlan(name, user_id,cycle_type, cycle_length)
         db.session.add(new_workoutPlan)
+        db.session.commit()
+        
+        for day_number in range(1, cycle_length + 1):
+            workout_day = WorkoutDay(workout_plan_id=new_workoutPlan._id, day_number=day_number)
+            db.session.add(workout_day)
         db.session.commit()
         flash("WorkoutPlan succesfully Created!")
         
