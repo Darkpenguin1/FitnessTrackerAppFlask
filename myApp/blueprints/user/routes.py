@@ -100,31 +100,6 @@ def delete_user(user_id):
     return redirect(url_for("user_bp.view"))
 
 
-
-
-@user_bp.route("/create_exercise/", methods=["GET", "POST"])
-@login_required
-def create_exercise():
-    if request.method == "POST":
-        name = request.form.get("name")
-        description = request.form.get("description")
-        weight = request.form.get("weight", None)
-        
-        if not name or not description:
-            flash("Name and Description are required.")
-            return redirect(url_for("user_bp.create_exercise"))
-
-        user_id = current_user._id
-
-        new_exercise = Exercise(name, description, user_id, weight)
-
-        db.session.add(new_exercise)
-        db.session.commit()
-
-        flash("Exercise Logged")
-        return redirect(url_for("user_bp.user"))
-    return render_template("createExercise.html")
-
 @user_bp.route("/view_exercises/", methods=["GET", "POST"])
 @login_required
 def view_exercises():
@@ -165,7 +140,7 @@ def create_workoutPlan():
         new_workoutPlan = WorkoutPlan(name, user_id,cycle_type, cycle_length)
         db.session.add(new_workoutPlan)
         db.session.commit()
-
+        flash("WorkoutPlan succesfully Created!")
         
     return render_template("create_workoutPlan.html")
 
@@ -173,12 +148,63 @@ def create_workoutPlan():
 @login_required
 def view_workoutPlan():
     user_id = current_user._id
-    plans = WorkoutPlan.query.filter_by(user_id=user_id).all()  
+    plans = WorkoutPlan.query.filter_by(user_id=user_id).all() 
     return render_template("view_workoutPlans.html", plans=plans)
 
+@user_bp.route("/edit_workoutPlan/", methods=["GET", "POST"])
+@login_required
+def edit_workoutPlan():
+    user_id = current_user._id
+    workout_plan = WorkoutPlan.query.filter_by(user_id=user_id).first()
+    return render_template("workout_planEdit.html", workout_plan=workout_plan)
+
+@user_bp.route("/create_exercise/<int:workoutday_id>", methods=["GET", "POST"])
+@login_required
+def create_exercise(workoutday_id):
+    if request.method == "POST":
+        name = request.form.get("name")
+        description = request.form.get("description")
+        weight = request.form.get("weight", None)
+        unit = request.form.get("unit", None)
+
+        if not name or not description:
+            flash("Name and Description are required.")
+            return redirect(url_for("user_bp.create_exercise", workoutday_id=workoutday_id))
+        
+        user_id = current_user._id
+        
+        new_exercise = Exercise(name=name, description=description, weight=weight, unit=unit, user_id=user_id)
+        workout_day = WorkoutDay.query.get(workoutday_id)
+        if workout_day:
+            workout_day.exercises.append(new_exercise)
+        
+        db.session.add(new_exercise)
+        db.session.commit()
+
+        flash("Exercise logged")
+        return redirect(url_for("user_bp.edit_workoutPlan"))
+    return render_template("createExercise.html")
 
 
 @user_bp.route("/log_pr/", methods=["GET", "POST"]) ## blank for now
 @login_required
 def log_pr():
+    if request.method == "POST":
+        name = request.form.get("name")
+        description = request.form.get("description")
+        weight = request.form.get("weight", None)
+        is_pr = True
+        if not name:
+            flash("Name is a required field!")
+            return redirect(url_for("user_bp.log_pr"))
+
+        user_id = current_user._id
+
+        new_exercise = Exercise(name, description, user_id, weight, is_pr)
+
+        db.session.add(new_exercise)
+        db.session.commit()
+
+        flash("PR Logged")
+        return redirect(url_for("user_bp.user"))
     return render_template("log_pr.html")

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Workout Plan - {{ workout_plan.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Workout Plan: {{ workout_plan.name }}</h1>
+    <p>Cycle Type: {{ workout_plan.cycle_type }}</p>
+    <p>Cycle Length: {{ workout_plan.cycle_length }} days</p>
+    <p>Days: {{ workout_plan.workout_days }} Demo</p>
+    <h2>Workout Days</h2>
+    {% if workout_plan.workout_days %}
+    <ul>
+        {% for day in workout_plan.workout_days %}
+        <li>
+            <h3>Day {{ day.day_number }}</h3>
+            <ul>
+                {% if day.exercises %}
+                {% for exercise in day.exercises %}
+                <li>{{ exercise.name }}: {{ exercise.description }} - {{ exercise.weight }} {{ exercise.unit }}</li>
+                {% endfor %}
+                {% else %}
+                <li>No exercises logged for this day.</li>
+                {% endif %}
+            </ul>
+            <form action="{{ url_for('user_bp.create_exercise', workoutday_id=day._id) }}" method="POST">
+                <div class="form-group">
+                    <label for="name">Exercise Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" class="form-control" id="description" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight:</label>
+                    <input type="number" class="form-control" id="weight" name="weight">
+                </div>
+                <div class="form-group">
+                    <label for="unit">Unit:</label>
+                    <input type="text" class="form-control" id="unit" name="unit">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Exercise</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No workout days found for this plan.</p>
+    {% endif %}
+</div>
+{% endblock %}

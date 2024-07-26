@@ -17,7 +17,7 @@ Workout Plans
                 <div class="card-body">
                     <p><strong>Cycle Type:</strong> {{ plan.cycle_type }}</p>
                     <p><strong>Cycle Length:</strong> {{ plan.cycle_length }} days</p>
-                    <a href="{{ url_for('user_bp.create_workoutPlan', plan_id=plan._id) }}" class="btn btn-primary">View & Edit</a>  <!--  REMEMBER TO CHANGE THIS LINE PLEASE -->
+                    <a href="{{ url_for('user_bp.edit_workoutPlan', plan_id=plan._id) }}" class="btn btn-primary">View & Edit</a>  <!--  REMEMBER TO CHANGE THIS LINE PLEASE -->
                 </div>
             </div>
         </div>
