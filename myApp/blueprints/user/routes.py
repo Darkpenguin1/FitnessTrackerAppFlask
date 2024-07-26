@@ -196,7 +196,9 @@ def create_exercise(workoutday_id):
             db.session.add(new_exercise)
             db.session.commit()
             flash("Exercise logged")
-            return redirect(url_for("user_bp.edit_workoutPlan"))
+            
+            plan_id = workout_day.workout_plan_id
+            return redirect(url_for("user_bp.edit_workoutPlan", plan_id=plan_id))    ## Bug caused here 
         
         flash("Workout day not found")
         return redirect(url_for("user_bp.create_exercise", workoutday_id=workoutday_id))

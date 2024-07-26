@@ -2,6 +2,9 @@
 html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .container-fluid {
@@ -24,13 +27,29 @@ html, body {
     color: black; /* Change navbar links color */
 }
 
-
+/* Style the footer */
 footer {
     background-color: #333333;
     color: #ffffff;
     text-align: center;
     padding: 20px 0;
-    position: fixed;
-    bottom: 0;
     width: 100%;
+}
+
+/* Main content should take up the available space */
+main {
+    flex: 1;
+    margin-bottom: 20px; /* Ensure there's space between content and footer */
+}
+
+/* Add media queries for responsiveness */
+@media (max-width: 768px) {
+    /* Adjust footer padding on smaller screens */
+    footer {
+        padding: 10px 0;
+    }
+    /* Adjust main content padding/margin on smaller screens */
+    main {
+        margin-bottom: 10px; /* Reduce margin for smaller screens */
+    }
 }
