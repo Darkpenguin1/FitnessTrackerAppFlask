@@ -151,11 +151,15 @@ def view_workoutPlan():
     plans = WorkoutPlan.query.filter_by(user_id=user_id).all() 
     return render_template("view_workoutPlans.html", plans=plans)
 
-@user_bp.route("/edit_workoutPlan/", methods=["GET", "POST"])
+
+@user_bp.route("/edit_workoutPlan/<int:plan_id>", methods=["GET", "POST"])
 @login_required
-def edit_workoutPlan():
-    user_id = current_user._id
-    workout_plan = WorkoutPlan.query.filter_by(user_id=user_id).first()
+def edit_workoutPlan(plan_id):
+    workout_plan = WorkoutPlan.query.get_or_404(plan_id)
+    if workout_plan.user_id != current_user._id:
+        flash("You do not have permission to edit this workout plan.")
+        return redirect(url_for("user_bp.view_workoutPlan"))
+    
     return render_template("workout_planEdit.html", workout_plan=workout_plan)
 
 @user_bp.route("/create_exercise/<int:workoutday_id>", methods=["GET", "POST"])
@@ -177,12 +181,13 @@ def create_exercise(workoutday_id):
         workout_day = WorkoutDay.query.get(workoutday_id)
         if workout_day:
             workout_day.exercises.append(new_exercise)
+            db.session.add(new_exercise)
+            db.session.commit()
+            flash("Exercise logged")
+            return redirect(url_for("user_bp.edit_workoutPlan"))
         
-        db.session.add(new_exercise)
-        db.session.commit()
-
-        flash("Exercise logged")
-        return redirect(url_for("user_bp.edit_workoutPlan"))
+        flash("Workout day not found")
+        return redirect(url_for("user_bp.create_exercise", workoutday_id=workoutday_id))
     return render_template("createExercise.html")
 
 
