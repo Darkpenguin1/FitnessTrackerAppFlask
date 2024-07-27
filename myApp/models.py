@@ -15,7 +15,6 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    exercises = db.relationship('Exercise', back_populates='user', lazy=True)
     workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True)
 
     def setPassword(self, password):
@@ -47,7 +46,7 @@ class Exercise(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user._id'), nullable=False)
 
     workout_days = db.relationship('WorkoutDay', secondary=workout_day_exercise, lazy='subquery', back_populates='exercises')
-    user = db.relationship('User', back_populates='exercises')
+    
 
     def __init__(self, name, description, user_id, weight=None, unit=None, date=None, is_pr=False):
         self.name = name
@@ -85,7 +84,6 @@ class WorkoutDay(db.Model):
     __tablename__ = 'workout_day'
     _id = db.Column(db.Integer, primary_key=True)
     workout_plan_id = db.Column(db.Integer, db.ForeignKey('workout_plan._id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user._id'), nullable=False)
     day_number = db.Column(db.Integer, nullable=False)
 
     exercises = db.relationship('Exercise', secondary=workout_day_exercise, lazy='subquery', back_populates='workout_days')
