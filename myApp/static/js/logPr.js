@@ -20,3 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Show edit form when "Edit" button is clicked
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const exerciseId = this.getAttribute('data-exercise-id');
+            document.getElementById('edit-form-' + exerciseId).style.display = 'block';
+        });
+    });
+});

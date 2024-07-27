@@ -16,7 +16,41 @@
             <ul>
                 {% if day.exercises %}
                 {% for exercise in day.exercises %}
-                <li>{{ exercise.name }}: {{ exercise.description }} - {{ exercise.weight }} {{ exercise.unit }}</li>
+                <li>
+                    <span class="exercise-details">
+                        {{ exercise.name }}: {{ exercise.description }} - {{ exercise.weight }} {{ exercise.unit }}
+                    </span>
+                    <button class="btn btn-secondary btn-sm edit-btn" data-exercise-id="{{ exercise._id }}">Edit</button>
+                    <form action="{{ url_for('user_bp.edit_exercise', workoutday_id=day._id) }}" method="POST" style="display:inline;">
+                        <input type="hidden" name="exercise_id" value="{{ exercise._id }}">
+                        <button type="submit" name="delete" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                    <div class="edit-form" id="edit-form-{{ exercise._id }}" style="display:none;">
+                        <form action="{{ url_for('user_bp.edit_exercise', workoutday_id=day._id) }}" method="POST">
+                            <input type="hidden" name="exercise_id" value="{{ exercise._id }}">
+                            <div class="form-group">
+                                <label for="name">Exercise Name:</label>
+                                <input type="text" class="form-control" name="name" value="{{ exercise.name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description:</label>
+                                <input type="text" class="form-control" name="description" value="{{ exercise.description }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="weight">Weight:</label>
+                                <input type="number" class="form-control" name="weight" value="{{ exercise.weight }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="unit">Unit:</label>
+                                <select class="form-control" name="unit" required>
+                                    <option value="kg" {% if exercise.unit == 'kg' %}selected{% endif %}>kg</option>
+                                    <option value="lb" {% if exercise.unit == 'lb' %}selected{% endif %}>lb</option>
+                                </select>
+                            </div>
+                            <button type="submit" name="update" class="btn btn-primary">Update Exercise</button>
+                        </form>
+                    </div>
+                </li>
                 {% endfor %}
                 {% else %}
                 <li>No exercises logged for this day.</li>

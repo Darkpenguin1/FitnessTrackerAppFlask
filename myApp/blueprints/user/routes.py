@@ -100,29 +100,6 @@ def delete_user(user_id):
     return redirect(url_for("user_bp.view"))
 
 
-@user_bp.route("/view_exercises/", methods=["GET", "POST"])
-@login_required
-def view_exercises():
-    if request.method == "POST":
-        if 'update' in request.form:
-            exercise_id = request.form.get('exercise_id')
-            exercise = Exercise.query.get(exercise_id)
-            if exercise:
-                exercise.name = request.form.get("name", exercise.name)
-                exercise.description = request.form.get("description", exercise.description)
-                exercise.weight = request.form.get("weight", exercise.weight)
-                db.session.commit()
-                flash("Exercise Succesfully Updated!", 'success')
-        elif 'delete' in request.form:
-            exercise_id = request.form.get('exercise_id')
-            exercise = Exercise.query.get(exercise_id)
-            if exercise:
-                db.session.delete(exercise)
-                db.session.commit()
-                flash("Exercise Deleted Successfully!", 'success')
-    exercises = Exercise.query.filter_by(user_id=current_user._id).all()
-    return render_template("viewExercises.html", exercises=exercises)
-
 @user_bp.route("/create_workoutPlan/", methods=["GET", "POST"])
 @login_required
 def create_workoutPlan():
@@ -198,11 +175,38 @@ def create_exercise(workoutday_id):
             flash("Exercise logged")
             
             plan_id = workout_day.workout_plan_id
-            return redirect(url_for("user_bp.edit_workoutPlan", plan_id=plan_id))    ## Bug caused here 
+            return redirect(url_for("user_bp.edit_workoutPlan", plan_id=plan_id))   
         
         flash("Workout day not found")
         return redirect(url_for("user_bp.create_exercise", workoutday_id=workoutday_id))
-    return render_template("createExercise.html")
+
+
+@user_bp.route("/edit_exercise/<int:workoutday_id>", methods=["GET", "POST"])
+@login_required
+def edit_exercise(workoutday_id):
+    workout_day = WorkoutDay.query.get_or_404(workoutday_id)
+    workout_plan = WorkoutPlan.query.get_or_404(workout_day.workout_plan_id)
+    if request.method == "POST":
+        exercise_id = request.form.get('exercise_id')
+        exercise = Exercise.query.get_or_404(exercise_id)
+        
+        if 'update' in request.form:    
+            if exercise in workout_day.exercises:
+                exercise.name = request.form.get("name", exercise.name)
+                exercise.description = request.form.get("description", exercise.description)
+                exercise.weight = request.form.get("weight", exercise.weight)
+                exercise.unit = request.form.get("unit", exercise.unit)
+                db.session.commit()
+                flash("Exercise Succesfully Updated!", 'success')
+        elif 'delete' in request.form:
+            if exercise in workout_day.exercises:
+                workout_day.exercises.remove(exercise)
+                db.session.delete(exercise)
+                db.session.commit()
+                flash("Exercise Deleted Successfully!", 'success')
+        
+    
+    return render_template("workout_planEdit.html", workout_plan=workout_plan)
 
 
 @user_bp.route("/log_pr/", methods=["GET", "POST"]) ## blank for now
