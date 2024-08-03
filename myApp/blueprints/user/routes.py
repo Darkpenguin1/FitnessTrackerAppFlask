@@ -1,11 +1,13 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash, Blueprint
 from flask import current_app as app
 from myApp import db
-from myApp.models import User, Exercise, WorkoutPlan, WorkoutDay
+from myApp.models import User, Exercise, WorkoutPlan, WorkoutDay, PR
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from flask_login import login_user, logout_user, login_required, current_user
+from datetime import datetime
+
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -213,21 +215,34 @@ def edit_exercise(workoutday_id):
 @login_required
 def log_pr():
     if request.method == "POST":
-        name = request.form.get("name")
-        description = request.form.get("description")
-        weight = request.form.get("weight", None)
-        is_pr = True
-        if not name:
+        exercise_name = request.form.get("name")
+        weight = request.form.get("weight")
+        unit = request.form.get("unit")
+        date_str = request.form.get("date")
+        
+        if not exercise_name:
             flash("Name is a required field!")
             return redirect(url_for("user_bp.log_pr"))
 
         user_id = current_user._id
+        try:
+            date = datetime.strptime(date_str, "%Y-%m-%d")
+        except ValueError:
+            flash("Invalid date format!")
+            return redirect(url_for("user_bp.log_pr"))
 
-        new_exercise = Exercise(name, description, user_id, weight, is_pr)
+        pr = PR(user_id=user_id ,exercise_name=exercise_name, weight=weight, unit=unit, date=date)
 
-        db.session.add(new_exercise)
+        db.session.add(pr)
         db.session.commit()
 
         flash("PR Logged")
         return redirect(url_for("user_bp.user"))
     return render_template("log_pr.html")
+
+@user_bp.route("/view_prs/", methods=["GET", "POST"])
+@login_required
+def view_prs():
+    user_id = current_user._id
+    prs = PR.query.filter_by(user_id=user_id).all()
+    return render_template("view_prs.html", prs=prs)

@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True)
+    prs = db.relationship('PR', back_populates='user', lazy=True)
 
     def setPassword(self, password):
         self.password_hash = generate_password_hash(password)
@@ -42,19 +43,17 @@ class Exercise(db.Model):
     weight = db.Column(db.Integer, nullable=True)
     unit = db.Column(db.String(2), nullable=True)
     date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    is_pr = db.Column(db.Boolean, default=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user._id'), nullable=False)
 
     workout_days = db.relationship('WorkoutDay', secondary=workout_day_exercise, lazy='subquery', back_populates='exercises')
     
 
-    def __init__(self, name, description, user_id, weight=None, unit=None, date=None, is_pr=False):
+    def __init__(self, name, description, user_id, weight=None, unit=None, date=None):
         self.name = name
         self.description = description
         self.weight = weight
         self.unit = unit
-        self.date = date or datetime.utcnow()
-        self.is_pr = is_pr
+        self.date = date or datetime.utcnow()      
         self.user_id = user_id
 
     def __repr__(self):
@@ -95,3 +94,24 @@ class WorkoutDay(db.Model):
 
     def __repr__(self):
         return f'<WorkoutDay Plan ID: {self.workout_plan_id}, Day Number {self.day_number}>'
+
+class PR(db.Model):
+    __tablename__ = 'pr'
+    _id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user._id'), nullable=False)
+    exercise_name = db.Column(db.String(100), nullable=False)
+    weight = db.Column(db.Integer, nullable=False)
+    unit = db.Column(db.String(2), nullable=True)
+    date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    user = db.relationship('User', back_populates='prs')
+
+    def __init__(self, user_id, exercise_name, weight, unit, date=None):
+        self.user_id = user_id
+        self.exercise_name = exercise_name
+        self.weight = weight
+        self.unit = unit
+        self.date = date or datetime.utcnow
+
+    def __repr__(self):
+        return f'<PR User ID: {self.user_id}, Exercise: {self.exercise_name}, Weight: {self.weight}, Date: {self.date}>'
