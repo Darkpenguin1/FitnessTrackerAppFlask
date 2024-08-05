@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, session, flash, Blueprint
+from flask import Flask, redirect, url_for, render_template, request, session, flash, Blueprint, jsonify
 from flask import current_app as app
 from myApp import db
 from myApp.models import User, Exercise, WorkoutPlan, WorkoutDay, PR

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+PR Progression
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1>PR Progression</h1>
+    <div class="mb-3">
+        <label for="exercise-select" class="form-label">Select Exercise:</label>
+        <select id="exercise-select" class="form-select">
+            <!-- Options will be populated here -->
+        </select>
+    </div>
+    <canvas id="prChart"></canvas>
+</div>
+
+<!-- Pass the user ID to JavaScript -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/pr_chart.js') }}"></script>
+{% endblock %}
