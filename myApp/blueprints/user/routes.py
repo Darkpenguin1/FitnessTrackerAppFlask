@@ -246,3 +246,12 @@ def view_prs():
     user_id = current_user._id
     prs = PR.query.filter_by(user_id=user_id).all()
     return render_template("view_prs.html", prs=prs)
+
+@user_bp.route("/api/prData/" methods=['GET'])
+@login_required
+def fetchPRData():
+    user_id = current_user._id
+    exercise_name = request.args.get('exercise_name')
+    prs = PR.query.filter_by(user_id=user_id, exercise_name=exercise_name)
+    pr_data = [{"date": pr.date, "value": pr.value} for pr in prs]
+    return jsonify(pr_data)
