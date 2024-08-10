@@ -246,3 +246,41 @@ def view_prs():
     user_id = current_user._id
     prs = PR.query.filter_by(user_id=user_id).all()
     return render_template("view_prs.html", prs=prs)
+
+@user_bp.route("/api/exercises/", methods=["GET"])
+@login_required
+def get_exercises():
+    user_id = current_user._id
+    exercises = db.session.query(PR.exercise_name).filter_by(user_id=user_id).distinct().all()
+    exercise_names = [exercise[0] for exercise in exercises]  
+    return jsonify(exercise_names)
+
+@user_bp.route("/api/getPRS/", methods=["GET"])
+@login_required
+def get_prs():
+    user_id = current_user._id
+    
+    # Query to fetch PRs grouped by exercise_name and ordered by date
+    prs = db.session.query(
+        PR.exercise_name,
+        PR.date,
+        PR.weight
+    ).filter_by(user_id=user_id).order_by(PR.exercise_name, PR.date).all()
+
+    pr_data = {}
+    for pr in prs:
+        exercise_name = pr.exercise_name
+        if exercise_name not in pr_data:
+            pr_data[exercise_name] = []
+        pr_data[exercise_name].append({
+            "date": pr.date.strftime("%Y-%m-%d"),
+            "weight": pr.weight
+        })
+    
+    return jsonify(pr_data)
+
+
+@user_bp.route("/pr_chart/")
+@login_required
+def view_PRChart():
+    return render_template("pr_chart.html")

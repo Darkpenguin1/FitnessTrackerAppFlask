@@ -13,12 +13,20 @@ PR Progression
             <!-- Options will be populated here -->
         </select>
     </div>
-    <canvas id="prChart"></canvas>
+    <canvas id="prChart" width="100" height="100"></canvas>
 </div>
-
-<!-- Pass the user ID to JavaScript -->
-
+<style>
+    #prChart {
+        width: 100%; /* Make the chart responsive */
+        max-width: 600px; /* Set a maximum width */
+        height: 400px; /* Set a fixed height */
+        margin: auto; /* Center align the chart */
+        border: 1px solid #ddd; /* Optional border */
+        border-radius: 8px; /* Optional rounded corners */
+    }
+    </style>    
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
 <script src="{{ url_for('static', filename='js/pr_chart.js') }}"></script>
 {% endblock %}
