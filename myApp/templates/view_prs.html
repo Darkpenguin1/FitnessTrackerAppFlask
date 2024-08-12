@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}View Records{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>View Personal Records (PRs)</h1>
+        {% if prs %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Exercise</th>
+                        <th>Weight</th>
+                        <th>Unit</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pr in prs %}
+                        <tr>
+                            <td>{{ pr.exercise_name }}</td>
+                            <td>{{ pr.weight }}</td>
+                            <td>{{ pr.unit }}</td>
+                            <td>{{ pr.date.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No personal records found.</p>
+        {% endif %}
+        <a href="{{ url_for('user_bp.log_pr') }}" class="btn btn-primary">Log New PR</a>
+        <a href="{{ url_for('user_bp.user') }}" class="btn btn-secondary">Back to Profile</a>
+    </div>
+{% endblock %}

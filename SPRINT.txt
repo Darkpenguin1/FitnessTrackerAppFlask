@@ -7,10 +7,24 @@ Everything I want to accomplish this "Sprint"
 
 1 week: Implement crud functionality to the admin page. To create, update, delete users from the db
 
+Week one summary:
+    I implemented CRUD functionality for exercises within the db and CRUD functionality without the built in admin portal from flask
+
+2 week: Figure out the scope of my project ie what I exactly want it to do logic wise
+curr date = 7/24/24
+
+For example when Users edit their workout plans do i associate the edit with the editing the cycle or length or each workout day, adding/deleting exercises
+from each workout day 
+
+In my mind I want this sort of layout
+
+PPL SPLIT PLAN 
+        Push                        Pull                           Legs
+        Exercise list:              Exercise list:                 Exercise list:
+            stuff....                   stuff...                        stuff....
 
 
-
-
+In this example I want stuff to be the thing being edited the exercises on each workout day basically the cycle day! 
 
 
 

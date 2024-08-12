@@ -2,10 +2,13 @@
 html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .container-fluid {
-    width: 100%;
+    flex-grow: 1;
     margin: 0;
     padding: 0;
 }
@@ -13,7 +16,7 @@ html, body {
 /* Ensure specificity and override */
 .navbar {
     background-color: #f0f0f0 !important; /* Ensure the background color overrides any other styles */
-    color: #ffffff; /* Change navbar text color */
+    color: black; /* Change navbar text color */
 }
 
 .navbar .navbar-brand {
@@ -24,13 +27,33 @@ html, body {
     color: black; /* Change navbar links color */
 }
 
-
+/* Style the footer */
 footer {
     background-color: #333333;
     color: #ffffff;
     text-align: center;
     padding: 20px 0;
-    position: fixed;
-    bottom: 0;
     width: 100%;
+    position: relative;
+    bottom: 0;
+}
+
+/* Main content should take up the available space */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Add media queries for responsiveness */
+@media (max-width: 768px) {
+    /* Adjust footer padding on smaller screens */
+    footer {
+        padding: 10px 0;
+    }
+    /* Adjust main content padding/margin on smaller screens */
+    main {
+        margin-bottom: 10px; /* Reduce margin for smaller screens */
+    }
 }

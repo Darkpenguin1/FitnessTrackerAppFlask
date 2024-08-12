@@ -5,35 +5,43 @@
     <head><link rel="stylesheet" href="{{ url_for('static', filename='css/homePage.css') }}"></head>
     
     <section class="hero">
-        <div class="container">
+        <div class="container text-center">
             <h2 class="hero-title">Track Your Fitness Goals</h2>
             <p class="hero-description">Stay fit, stay motivated. Achieve your fitness goals with our easy-to-use fitness tracker.</p>
-            <a href="/signup/" class="cta-button">Get Started</a>
+            <a href="/signup/" class="cta-button btn btn-primary">Get Started</a>
         </div>
     </section>
 
-    <section class="features">
+    <section class="features py-5">
         <div class="container">
-            <div class="feature">
-                <div class="feature-icon">🏋️‍♂️</div>
-                <div class="feature-title">Track Workouts</div>
-                <div class="feature-description">Log your workouts, set goals, and track your progress over time.</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">📈</div>
-                <div class="feature-title">View Statistics</div>
-                <div class="feature-description">Visualize your fitness data with detailed statistics and charts.</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">💬</div>
-                <div class="feature-title">Join Community</div>
-                <div class="feature-description">Connect with others, share achievements, and get inspired.</div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="feature">
+                        <div class="feature-icon">🏋️‍♂️</div>
+                        <div class="feature-title">Track Workouts</div>
+                        <div class="feature-description">Log your workouts, set goals, and track your progress over time.</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-title">View Statistics</div>
+                        <div class="feature-description">Visualize your fitness data with detailed statistics and charts.</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature">
+                        <div class="feature-icon">💬</div>
+                        <div class="feature-title">Join Community</div>
+                        <div class="feature-description">Connect with others, share achievements, and get inspired.</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="testimonials">
-        <div class="container">
+    <section class="testimonials py-5">
+        <div class="container text-center">
             <h2>What Our Users Say</h2>
             <div class="testimonial">
                 <p>"I love using this fitness tracker! It keeps me accountable and motivated every day."</p>

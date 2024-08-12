@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+Workout Plans
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Workout Plans</h2>
+    <div class="row">
+        {% for plan in plans %}
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h4>{{ plan.name }}</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Cycle Type:</strong> {{ plan.cycle_type }}</p>
+                    <p><strong>Cycle Length:</strong> {{ plan.cycle_length }} days</p>
+                    <a href="{{ url_for('user_bp.edit_workoutPlan', plan_id=plan._id) }}" class="btn btn-primary">View & Edit</a>  <!--  REMEMBER TO CHANGE THIS LINE PLEASE -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -3,7 +3,6 @@
 {% block title %}PR Log{% endblock %}
 
 {% block content %}
-
     <head>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/logPr.css') }}">
     </head>
@@ -14,11 +13,6 @@
                 <div class="form-group">
                     <label for="name">Exercise Name:</label>
                     <input type="text" id="name" name="name" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <input type="text" id="description" name="description" class="form-control" required>
                 </div>
                 
                 <div class="form-group">
@@ -46,6 +40,4 @@
         </div>
         <script src="{{ url_for('static', filename='js/logPr.js') }}"></script>
     </body>
-
-
 {% endblock %}
