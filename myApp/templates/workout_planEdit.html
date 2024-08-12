@@ -3,46 +3,53 @@
 {% block title %}Workout Plan - {{ workout_plan.name }}{% endblock %}
 
 {% block content %}
+<head>
+    <link href="{{ url_for('static', filename='css/editWorkoutPlan.css') }}" rel="stylesheet">
+</head>
 <div class="container">
-    <h1>Workout Plan: {{ workout_plan.name }}</h1>
-    <p>Cycle Type: {{ workout_plan.cycle_type }}</p>
-    <p>Cycle Length: {{ workout_plan.cycle_length }} days</p>
-    <h2>Workout Days</h2>
+    <h1 class="my-4">{{ workout_plan.name }}</h1>
+    <p class="lead">Cycle Type: {{ workout_plan.cycle_type }}</p>
+    <p class="lead">Cycle Length: {{ workout_plan.cycle_length }} days</p>
+    <h2 class="my-4">Workout Days</h2>
     {% if workout_plan.workout_days %}
-    <ul>
+    <div class="list-group">
         {% for day in workout_plan.workout_days %}
-        <li>
-            <h3>Day {{ day.day_number }}</h3>
-            <ul>
+        <div class="list-group-item">
+            <h3 class="h4">Day {{ day.day_number }}</h3>
+            <ul class="list-unstyled">
                 {% if day.exercises %}
                 {% for exercise in day.exercises %}
-                <li>
-                    <span class="exercise-details">
-                        {{ exercise.name }}: {{ exercise.description }} - {{ exercise.weight }} {{ exercise.unit }}
-                    </span>
-                    <button class="btn btn-secondary btn-sm edit-btn" data-exercise-id="{{ exercise._id }}">Edit</button>
-                    <form action="{{ url_for('user_bp.edit_exercise', workoutday_id=day._id) }}" method="POST" style="display:inline;">
-                        <input type="hidden" name="exercise_id" value="{{ exercise._id }}">
-                        <button type="submit" name="delete" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                    <div class="edit-form" id="edit-form-{{ exercise._id }}" style="display:none;">
+                <li class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="exercise-details">
+                            <strong>{{ exercise.name }}:</strong> {{ exercise.description }} - {{ exercise.weight }} {{ exercise.unit }}
+                        </span>
+                        <div>
+                            <button class="btn btn-secondary btn-sm me-2 edit-btn" data-exercise-id="{{ exercise._id }}">Edit</button>
+                            <form action="{{ url_for('user_bp.edit_exercise', workoutday_id=day._id) }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="exercise_id" value="{{ exercise._id }}">
+                                <button type="submit" name="delete" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="edit-form mt-3" id="edit-form-{{ exercise._id }}" style="display:none;">
                         <form action="{{ url_for('user_bp.edit_exercise', workoutday_id=day._id) }}" method="POST">
                             <input type="hidden" name="exercise_id" value="{{ exercise._id }}">
-                            <div class="form-group">
-                                <label for="name">Exercise Name:</label>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Exercise Name:</label>
                                 <input type="text" class="form-control" name="name" value="{{ exercise.name }}" required>
                             </div>
-                            <div class="form-group">
-                                <label for="description">Description:</label>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description:</label>
                                 <input type="text" class="form-control" name="description" value="{{ exercise.description }}" required>
                             </div>
-                            <div class="form-group">
-                                <label for="weight">Weight:</label>
+                            <div class="mb-3">
+                                <label for="weight" class="form-label">Weight:</label>
                                 <input type="number" class="form-control" name="weight" value="{{ exercise.weight }}">
                             </div>
-                            <div class="form-group">
-                                <label for="unit">Unit:</label>
-                                <select class="form-control" name="unit" required>
+                            <div class="mb-3">
+                                <label for="unit" class="form-label">Unit:</label>
+                                <select class="form-select" name="unit" required>
                                     <option value="kg" {% if exercise.unit == 'kg' %}selected{% endif %}>kg</option>
                                     <option value="lb" {% if exercise.unit == 'lb' %}selected{% endif %}>lb</option>
                                 </select>
@@ -56,22 +63,23 @@
                 <li>No exercises logged for this day.</li>
                 {% endif %}
             </ul>
-            <form action="{{ url_for('user_bp.create_exercise', workoutday_id=day._id) }}" method="POST">
-                <div class="form-group">
-                    <label for="name">Exercise Name:</label>
+            <form action="{{ url_for('user_bp.create_exercise', workoutday_id=day._id) }}" method="POST" class="mt-4">
+                <h4>Add New Exercise</h4>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Exercise Name:</label>
                     <input type="text" class="form-control" id="name" name="name" required>
                 </div>
-                <div class="form-group">
-                    <label for="description">Description:</label>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
                     <input type="text" class="form-control" id="description" name="description" required>
                 </div>
-                <div class="form-group">
-                    <label for="weight">Weight:</label>
+                <div class="mb-3">
+                    <label for="weight" class="form-label">Weight:</label>
                     <input type="number" class="form-control" id="weight" name="weight">
                 </div>
-                <div class="form-group">
-                    <label for="unit">Unit:</label>
-                    <select class="form-control" id="unit" name="unit" required>
+                <div class="mb-3">
+                    <label for="unit" class="form-label">Unit:</label>
+                    <select class="form-select" id="unit" name="unit" required>
                         <option value="" disabled selected>Select unit</option>
                         <option value="kg">kg</option>
                         <option value="lb">lb</option>
@@ -79,9 +87,9 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Add Exercise</button>
             </form>
-        </li>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
     {% else %}
     <p>No workout days found for this plan.</p>
     {% endif %}

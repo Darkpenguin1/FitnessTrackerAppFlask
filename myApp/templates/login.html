@@ -2,14 +2,6 @@
 {% block title %}Login page{% endblock %}
 
 {% block content %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for msg in messages %}
-                <p>{{msg}}</p>
-            {% endfor %}
-        {% endif %}    
-    {% endwith %}
-
 <body>
     <div class="container">
     <div class="row justify-content-center">
@@ -19,7 +11,7 @@
             <h3>Login</h3>
             </div>
             <div class="card-body">
-            <form action="/login" method="POST">
+            <form action="/login/" method="POST">
                 <div class="form-group">
                 <label for="email">Email address</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
@@ -32,16 +24,12 @@
             </form>
             </div>
             <div class="card-footer text-center">
-            <a href="/signup">Don't have an account? Sign up</a>
+            <a href="/signup/">Don't have an account? Sign up</a>
             </div>
         </div>
         </div>
     </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 {% endblock %}
