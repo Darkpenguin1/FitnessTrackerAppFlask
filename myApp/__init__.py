@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
 from datetime import timedelta
 from config import Config
 from dotenv import load_dotenv

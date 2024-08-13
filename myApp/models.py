@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
     workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True)
     prs = db.relationship('PR', back_populates='user', lazy=True)
 
@@ -62,9 +62,9 @@ class Exercise(db.Model):
 class WorkoutPlan(db.Model):
     __tablename__ = 'workout_plan'
     _id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user._id'), nullable=False)
-    cycle_type = db.Column(db.String, nullable=False)
+    cycle_type = db.Column(db.String(20), nullable=False)
     cycle_length = db.Column(db.Integer, nullable=False)
 
     workout_days = db.relationship('WorkoutDay', back_populates='workout_plan', lazy=True)
