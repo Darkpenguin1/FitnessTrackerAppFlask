@@ -1,5 +1,4 @@
 .env
-config.py
 venv/
 *.pyc
 migrations
