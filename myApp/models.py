@@ -84,7 +84,7 @@ class WorkoutDay(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     workout_plan_id = db.Column(db.Integer, db.ForeignKey('workout_plan._id'), nullable=False)
     day_number = db.Column(db.Integer, nullable=False)
-
+    name = db.Column(db.String(50), nullable=False, default="Workout Day")
     exercises = db.relationship('Exercise', secondary=workout_day_exercise, lazy='subquery', back_populates='workout_days')
     workout_plan = db.relationship('WorkoutPlan', back_populates='workout_days')
 

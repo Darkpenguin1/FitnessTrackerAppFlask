@@ -60,7 +60,7 @@
                 </li>
                 {% endfor %}
                 {% else %}
-                <li>No exercises logged for this day.</li>
+                <li>No exercises planned for this day.</li>
                 {% endif %}
             </ul>
             <form action="{{ url_for('user_bp.create_exercise', workoutday_id=day._id) }}" method="POST" class="mt-4">

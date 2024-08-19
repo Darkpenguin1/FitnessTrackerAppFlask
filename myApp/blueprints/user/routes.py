@@ -142,6 +142,23 @@ def view_workoutPlan():
     plans = WorkoutPlan.query.filter_by(user_id=user_id).all() 
     return render_template("view_workoutPlans.html", plans=plans)
 
+@user_bp.route("/edit_workoutPlans/<int:plan_id>", methods=["GET", "POST"])
+@login_required
+def edit_workoutPlans(plan_id):
+    user_id = current_user._id
+    plan = WorkoutPlan.query.get_or_404(plan_id)
+    if request.method == "POST":
+        if 'update' in request.form:
+            plan.name = plan.request.form.get('name', plan.name)
+            plan.cycle_type = plan.request.form.get('cycle_type', plan.cycle_type)
+            plan.cycle_length = plan.request.form.get('cycle_length', plan.cycle_length)
+            db.session.commit()
+        elif 'delete' in request.form:
+            db.session.delete(plan)
+            db.session.commit()
+            return redirect(url_for('view_workoutPlans'))
+    return render_template("edit_workoutPlans", plan=plan)
+
 
 @user_bp.route("/edit_workoutPlan/<int:plan_id>", methods=["GET", "POST"])
 @login_required
