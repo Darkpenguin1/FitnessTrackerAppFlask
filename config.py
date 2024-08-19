@@ -8,13 +8,13 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     conn_str = os.getenv('AZURE_POSTGRESQL_CONNECTIONSTRING')
-    conn_str_params = {pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.split(' ')}
-
+    conn_str_params = {pair.split('=')[0].strip(): pair.split('=')[1].strip() for pair in conn_str.split(';') if '=' in pair}
+    
     DATABASE_URI = 'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
-        dbuser=conn_str_params['user'],
-        dbpass=conn_str_params['password'],
-        dbhost=conn_str_params['host'],
-        dbname=conn_str_params['dbname']
+        dbuser=conn_str_params.get('User Id'),
+        dbpass=conn_str_params.get('Password'),
+        dbhost=conn_str_params.get('Server'),
+        dbname=conn_str_params.get('Database')
     )
 
     SESSION_COOKIE_SECURE = True
