@@ -7,7 +7,7 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    conn_str = os.getenv('AZURE_POSTGRESQL_CONNECTIONSTRING')
+    conn_str = os.getenv('POSTGRESQLCONNSTR_AZURE_POSTGRESQL_CONNECTIONSTRING')
     conn_str_params = {pair.split('=')[0].strip(): pair.split('=')[1].strip() for pair in conn_str.split(';') if '=' in pair}
     
     DATABASE_URI = 'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
