@@ -11,4 +11,12 @@ class Config:
     f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 )
     
-    
+class ProductionConfig(Config):
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.getenv('AZURE_POSTGRESQL_CONNECTIONSTRING')
+    SESSION_COOKIE_SECURE = True
+    REMEMBER_COOKIE_SECURE = True
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_size': 20,
+        'max_overflow': 0
+    }   
