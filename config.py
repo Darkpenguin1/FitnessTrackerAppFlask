@@ -15,28 +15,16 @@ class ProductionConfig(Config):
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    conn_str = os.getenv('AZURE_POSTGRESQL_CONNECTIONSTRING')
-    if conn_str:
-        try:
-            # Parsing the connection string
-            conn_str_params = {}
-            for pair in conn_str.split(';'):
-                if '=' in pair:
-                    key, value = pair.split('=', 1)
-                    conn_str_params[key.strip()] = value.strip()
+    conn_str = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
+    conn_str_params = {pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.split(' ')}
 
-            DATABASE_URI = 'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
-                dbuser=conn_str_params.get('User Id'),
-                dbpass=conn_str_params.get('Password'),
-                dbhost=conn_str_params.get('Server'),
-                dbname=conn_str_params.get('Database')
-            )
-            SQLALCHEMY_DATABASE_URI = DATABASE_URI
-        except Exception as e:
-            raise ValueError(f"Error parsing AZURE_POSTGRESQL_CONNECTIONSTRING: {e}")
-    else:
-        raise ValueError("AZURE_POSTGRESQL_CONNECTIONSTRING environment variable not set")
-
+    DATABASE_URI = 'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
+        dbuser=conn_str_params['user'],
+        dbpass=conn_str_params['password'],
+        dbhost=conn_str_params['host'],
+        dbname=conn_str_params['dbname']
+    )
+    SQLALCHEMY_DATABASE_URI = DATABASE_URI
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
     SQLALCHEMY_ENGINE_OPTIONS = {
