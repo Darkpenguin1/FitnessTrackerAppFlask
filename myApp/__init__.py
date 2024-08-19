@@ -18,10 +18,10 @@ def create_app():
     load_dotenv()
     app = Flask(__name__)
     
-    if os.getenv('FLASK_ENV') == 'production':
-        app.config.from_object(ProductionConfig)
-    else:
+    if os.getenv('FLASK_ENV') == 'development':
         app.config.from_object(Config)
+    else:
+        app.config.from_object(ProductionConfig)
     
     
     app.permanent_session_lifetime = timedelta(hours=5)
