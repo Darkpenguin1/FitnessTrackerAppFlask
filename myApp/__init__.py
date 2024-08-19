@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from datetime import timedelta
-from config import Config, ProductionConfig
+from config import Config
 from dotenv import load_dotenv
 import os
 from flask_login import LoginManager
