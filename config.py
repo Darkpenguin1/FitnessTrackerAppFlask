@@ -17,14 +17,23 @@ class ProductionConfig(Config):
 
     conn_str = os.getenv('AZURE_POSTGRESQL_CONNECTIONSTRING')
     if conn_str:
-        conn_str_params = dict(pair.split('=') for pair in conn_str.split(' '))
-        DATABASE_URI = 'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
-            dbuser=conn_str_params.get('user'),
-            dbpass=conn_str_params.get('password'),
-            dbhost=conn_str_params.get('host'),
-            dbname=conn_str_params.get('dbname')
-        )
-        SQLALCHEMY_DATABASE_URI = DATABASE_URI
+        try:
+            # Parsing the connection string
+            conn_str_params = {}
+            for pair in conn_str.split(';'):
+                if '=' in pair:
+                    key, value = pair.split('=', 1)
+                    conn_str_params[key.strip()] = value.strip()
+
+            DATABASE_URI = 'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
+                dbuser=conn_str_params.get('User Id'),
+                dbpass=conn_str_params.get('Password'),
+                dbhost=conn_str_params.get('Server'),
+                dbname=conn_str_params.get('Database')
+            )
+            SQLALCHEMY_DATABASE_URI = DATABASE_URI
+        except Exception as e:
+            raise ValueError(f"Error parsing AZURE_POSTGRESQL_CONNECTIONSTRING: {e}")
     else:
         raise ValueError("AZURE_POSTGRESQL_CONNECTIONSTRING environment variable not set")
 
