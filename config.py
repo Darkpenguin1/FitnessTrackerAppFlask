@@ -9,12 +9,10 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    db_name = os.getenv('POSTGRESQLDB_NAME')
-    db_server = os.getenv('POSTGRESQLDB_SERVER')
-    db_user = os.getenv('POSTGRESQLDB_USER')
-    db_password = os.getenv('POSTGRESQLDB_PASSWORD')
-
-    DATABASE_URI = f'postgresql+psycopg2://{db_user}:{db_password}@{db_server}/{db_name}'
+    SQLALCHEMY_DATABASE_URI = (
+        f"postgresql://{os.getenv('POSTGRESQLDB_USER')}:{os.getenv('POSTGRESQLDB_PASSWORD')}"
+        f"@{os.getenv('POSTGRESQLDB_SERVER')}:{os.getenv('POSTGRESQLDB_PORT')}/{os.getenv('POSTGRESQLDB_NAME')}"
+    )
 
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
