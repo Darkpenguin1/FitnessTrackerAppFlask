@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from datetime import timedelta
-from config import Config
+from config import Config, DeploymentConfig
 from dotenv import load_dotenv
 import os
 from flask_login import LoginManager
@@ -18,7 +18,10 @@ def create_app():
     load_dotenv()
     app = Flask(__name__)
     
-    app.config.from_object(Config)
+    if os.getenv("FLASK_ENV") == 'production':
+        app.config.from_object(DeploymentConfig)
+    else:
+        app.config.from_object(Config)
     
     
     app.permanent_session_lifetime = timedelta(hours=5)

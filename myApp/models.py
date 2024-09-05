@@ -15,7 +15,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
-    workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True)
+    workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True cascade="all, delete-orphan")
     prs = db.relationship('PR', back_populates='user', lazy=True)
 
     def setPassword(self, password):
@@ -67,7 +67,7 @@ class WorkoutPlan(db.Model):
     cycle_type = db.Column(db.String(20), nullable=False)
     cycle_length = db.Column(db.Integer, nullable=False)
 
-    workout_days = db.relationship('WorkoutDay', back_populates='workout_plan', lazy=True)
+    workout_days = db.relationship('WorkoutDay', back_populates='workout_plan', lazy=True, cascade="all, delete-orphan")
     user = db.relationship('User', back_populates='workout_plans')
 
     def __init__(self, name, user_id, cycle_type, cycle_length):
