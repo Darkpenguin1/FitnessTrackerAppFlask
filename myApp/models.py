@@ -15,7 +15,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
-    workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True cascade="all, delete-orphan")
+    workout_plans = db.relationship('WorkoutPlan', back_populates='user', lazy=True, cascade="all, delete-orphan")
     prs = db.relationship('PR', back_populates='user', lazy=True)
 
     def setPassword(self, password):
