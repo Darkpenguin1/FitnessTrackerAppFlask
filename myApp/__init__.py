@@ -20,15 +20,17 @@ def create_app():
     
     if os.getenv("FLASK_ENV") == 'production':
         app.config.from_object(DeploymentConfig)
+        migrate_dir = 'migrations_prod'
     else:
         app.config.from_object(Config)
+        migrate_dir = 'migrations_dev'
     
     
     app.permanent_session_lifetime = timedelta(hours=5)
     
     
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, migrate_dir)
     admin.init_app(app)
 
     login_manager = LoginManager()
